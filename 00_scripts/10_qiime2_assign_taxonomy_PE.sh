@@ -140,12 +140,15 @@ cp $DATABASE/Silva-v138-full-length-seq-taxonomy.qza taxonomy/16S/RefTaxo.qza
 ###        --o-reads taxonomy/RefSeq.qza 
 ###
 
-# From Clarisse: Forward primer 5′-GCACCTAAYTGGGYDTAAAGNG-3′ Reverse primer 5′-TACNVGGGTATCTAATCC-3′
-
 # According ADNiD: Caporaso et al. (1), 515f Original and 806r Original
+
+
+# From Clarisse and from bioinformatics <bioinformatics@microsynth.ch>
+# The sequences for the V34 primers were:
+# 341F    CCTACGGGNGGCWGCAG       805R    GACTACHVGGGTATCTAATCC
 qiime feature-classifier extract-reads --i-sequences taxonomy/16S/DataSeq.qza \
-        --p-f-primer 'GCACCTAAYTGGGYDTAAAGNG' \
-        --p-r-primer 'TACNVGGGTATCTAATCC' \
+        --p-f-primer 'CCTACGGGNGGCWGCAG' \
+        --p-r-primer 'GACTACHVGGGTATCTAATCC' \
         --o-reads taxonomy/16S/RefSeq.qza 
 
 
