@@ -155,76 +155,76 @@ qiime feature-classifier extract-reads --i-sequences taxonomy/16S/DataSeq.qza \
 # Aim: Create a scikit-learn naive_bayes classifier for reads
 
 qiime feature-classifier fit-classifier-naive-bayes \
-  --i-reference-reads taxonomy/16S/16SRefSeq.qza \
-  --i-reference-taxonomy taxonomy/16S/16SRefTaxo.qza \
-  --o-classifier taxonomy/16S/16SClassifier.qza
+  --i-reference-reads taxonomy/16S/RefSeq.qza \
+  --i-reference-taxonomy taxonomy/16S/RefTaxo.qza \
+  --o-classifier taxonomy/16S/Classifier.qza
   
 # Aim: Create a scikit-learn naive_bayes classifier for reads
 
 qiime feature-classifier classify-sklearn \
-   --i-classifier taxonomy/16S/16SClassifier.qza \
+   --i-classifier taxonomy/16S/Classifier.qza \
    --i-reads core/ConRepSeq.qza \
-   --o-classification taxonomy/16S/16Staxonomy_reads-per-batch_ConRepSeq.qza
+   --o-classification taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qza
    
 qiime feature-classifier classify-sklearn \
-  --i-classifier taxonomy/16S/16SClassifier.qza \
+  --i-classifier taxonomy/16S/Classifier.qza \
   --i-reads core/RepSeq.qza \
-  --o-classification taxonomy/16S/16Staxonomy_reads-per-batch_RepSeq.qza
+  --o-classification taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qza
 
 qiime feature-classifier classify-sklearn \
-  --i-classifier taxonomy/16S/16SClassifier.qza \
+  --i-classifier taxonomy/16S/Classifier.qza \
   --i-reads core/RarRepSeq.qza \
-  --o-classification taxonomy/16S/16Staxonomy_reads-per-batch_RarRepSeq.qza
+  --o-classification taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qza
 
 # Switch to https://chmi-sops.github.io/mydoc_qiime2.html#step-9-assign-taxonomy
 # --p-reads-per-batch 0 (default)
 
 qiime metadata tabulate \
-  --m-input-file taxonomy/16S/16Staxonomy_reads-per-batch_RarRepSeq.qza \
-  --o-visualization taxonomy/16S/16Staxonomy_reads-per-batch_RarRepSeq.qzv
+  --m-input-file taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qza \
+  --o-visualization taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qzv
 
 qiime metadata tabulate \
-  --m-input-file taxonomy/16S/16Staxonomy_reads-per-batch_ConRepSeq.qza \
-  --o-visualization taxonomy/16S/16Staxonomy_reads-per-batch_ConRepSeq.qzv
+  --m-input-file taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qza \
+  --o-visualization taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qzv
   
 qiime metadata tabulate \
-  --m-input-file taxonomy/16S/16Staxonomy_reads-per-batch_RepSeq.qza \
-  --o-visualization taxonomy/16S/16Staxonomy_reads-per-batch_RepSeq.qzv  
+  --m-input-file taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qza \
+  --o-visualization taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qzv  
 
 # Now create a visualization of the classified sequences.
   
 qiime taxa barplot \
   --i-table core/Table.qza \
-  --i-taxonomy taxonomy/16S/16Staxonomy_reads-per-batch_RepSeq.qza \
+  --i-taxonomy taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qza \
   --m-metadata-file $DATABASE/sample-metadata.tsv \
   --o-visualization taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RepSeq.qzv
 
 qiime taxa barplot \
   --i-table core/ConTable.qza \
-  --i-taxonomy taxonomy/16S/16Staxonomy_reads-per-batch_ConRepSeq.qza \
+  --i-taxonomy taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qza \
   --m-metadata-file $DATABASE/sample-metadata.tsv \
   --o-visualization taxonomy/16S/16Staxa-bar-plots_reads-per-batch_ConRepSeq.qzv
   
 qiime taxa barplot \
   --i-table core/RarTable.qza \
-  --i-taxonomy taxonomy/16S/16Staxonomy_reads-per-batch_RarRepSeq.qza \
+  --i-taxonomy taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qza \
   --m-metadata-file $DATABASE/sample-metadata.tsv \
   --o-visualization taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RarRepSeq.qzv  
 
-qiime tools export --input-path taxonomy/16S/16SClassifier.qza --output-path export/taxonomy/16S/16SClassifier
-qiime tools export --input-path taxonomy/16S/16SRefSeq.qza --output-path export/taxonomy/16S/16SRefSeq
+qiime tools export --input-path taxonomy/16S/Classifier.qza --output-path export/taxonomy/16S/Classifier
+qiime tools export --input-path taxonomy/16S/RefSeq.qza --output-path export/taxonomy/16S/RefSeq
 qiime tools export --input-path taxonomy/16S/16SDataSeq.qza --output-path export/taxonomy/16S/16SDataSeq
-qiime tools export --input-path taxonomy/16S/16SRefTaxo.qza --output-path export/taxonomy/16S/16SRefTaxo
+qiime tools export --input-path taxonomy/16S/RefTaxo.qza --output-path export/taxonomy/16S/RefTaxo
   
 qiime tools export --input-path taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RarRepSeq.qzv --output-path export/taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RarRepSeq
 qiime tools export --input-path taxonomy/16S/16Staxa-bar-plots_reads-per-batch_ConRepSeq.qzv --output-path export/taxonomy/16S/16Staxa-bar-plots_reads-per-batch_ConRepSeq
 qiime tools export --input-path taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RepSeq.qzv --output-path export/taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RepSeq
 
-qiime tools export --input-path taxonomy/16S/16Staxonomy_reads-per-batch_RepSeq.qzv --output-path export/taxonomy/16S/16Staxonomy_reads-per-batch_RepSeq_visual
-qiime tools export --input-path taxonomy/16S/16Staxonomy_reads-per-batch_ConRepSeq.qzv --output-path export/taxonomy/16S/16Staxonomy_reads-per-batch_ConRepSeq_visual
-qiime tools export --input-path taxonomy/16S/16Staxonomy_reads-per-batch_RarRepSeq.qzv --output-path export/taxonomy/16S/16Staxonomy_reads-per-batch_RarRepSeq_visual
+qiime tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qzv --output-path export/taxonomy/16S/taxonomy_reads-per-batch_RepSeq_visual
+qiime tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qzv --output-path export/taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq_visual
+qiime tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qzv --output-path export/taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq_visual
 
-qiime tools export --input-path taxonomy/16S/16Staxonomy_reads-per-batch_RepSeq.qza --output-path export/taxonomy/16S/16Staxonomy_reads-per-batch_RepSeq
-qiime tools export --input-path taxonomy/16S/16Staxonomy_reads-per-batch_ConRepSeq.qza --output-path export/taxonomy/16S/16Staxonomy_reads-per-batch_ConRepSeq
-qiime tools export --input-path taxonomy/16S/16Staxonomy_reads-per-batch_RarRepSeq.qza --output-path export/taxonomy/16S/16Staxonomy_reads-per-batch_RarRepSeq
+qiime tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qza --output-path export/taxonomy/16S/taxonomy_reads-per-batch_RepSeq
+qiime tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qza --output-path export/taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq
+qiime tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qza --output-path export/taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq
 
