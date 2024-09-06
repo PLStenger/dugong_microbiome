@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-WORKING_DIRECTORY=/scratch_vol1/fungi/dugong_microbiome/05_QIIME2
-OUTPUT=/scratch_vol1/fungi/dugong_microbiome/05_QIIME2/visual
+WORKING_DIRECTORY=/home/fungi/dugong_microbiome/05_QIIME2
+OUTPUT=/home/fungi/dugong_microbiome/05_QIIME2/visual
 
-DATABASE=/scratch_vol1/fungi/dugong_microbiome/98_database_files
-TMPDIR=/scratch_vol1
+DATABASE=/home/fungi/dugong_microbiome/98_database_files
+TMPDIR=/home
 
 # Aim: perform diversity metrics and rarefaction
 
@@ -30,7 +30,7 @@ mkdir -p pcoa
 mkdir -p export/pcoa
 
 # I'm doing this step in order to deal the no space left in cluster :
-export TMPDIR='/scratch_vol1/fungi'
+export TMPDIR='/home/fungi'
 echo $TMPDIR
 
 # core_metrics_phylogenetic:
