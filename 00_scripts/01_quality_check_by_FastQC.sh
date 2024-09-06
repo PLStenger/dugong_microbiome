@@ -6,7 +6,7 @@
 # Correct tool citation : Andrews, S. (2010). FastQC: a quality control tool for high throughput sequence data.
 
 
-WORKING_DIRECTORY=/home/fungi/dugong_microbiome/01_raw_data
+WORKING_DIRECTORY=/home/fungi/dugong_microbiome/01_raw_data/Original_reads
 OUTPUT=/home/fungi/dugong_microbiome/02_quality_check
 
 # Make the directory (mkdir) only if not existe already(-p)
