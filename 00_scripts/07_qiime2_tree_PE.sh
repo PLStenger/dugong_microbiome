@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-WORKING_DIRECTORY=/scratch_vol1/fungi/dugong_microbiome/05_QIIME2
-OUTPUT=/scratch_vol1/fungi/dugong_microbiome/05_QIIME2/visual
-TMPDIR=/scratch_vol1
+WORKING_DIRECTORY=/home/fungi/dugong_microbiome/05_QIIME2
+OUTPUT=/home/fungi/dugong_microbiome/05_QIIME2/visual
+TMPDIR=/home
 
 # Make the directory (mkdir) only if not existe already(-p)
 mkdir -p $OUTPUT
@@ -19,7 +19,7 @@ eval "$(conda shell.bash hook)"
 conda activate qiime2-2021.4
 
 # I'm doing this step in order to deal the no space left in cluster :
-export TMPDIR='/scratch_vol1/fungi'
+export TMPDIR='/home/fungi'
 echo $TMPDIR
 
 #carry out a multiple seqeunce alignment using Mafft
