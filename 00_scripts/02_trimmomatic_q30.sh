@@ -3,13 +3,13 @@
 # trimmomatic version 0.39
 # trimmomatic manual : http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf
 
-WORKING_DIRECTORY=/scratch_vol1/fungi/dugong_microbiome/01_raw_data
-OUTPUT=/scratch_vol1/fungi/dugong_microbiome/03_cleaned_data
+WORKING_DIRECTORY=/home/fungi/dugong_microbiome/01_raw_data
+OUTPUT=/home/fungi/dugong_microbiome/03_cleaned_data
 
 # Make the directory (mkdir) only if not existe already(-p)
 mkdir -p $OUTPUT
 
-ADAPTERFILE=/scratch_vol1/fungi/dugong_microbiome/99_softwares/adapters_sequences.fasta
+ADAPTERFILE=/home/fungi/dugong_microbiome/99_softwares/adapters_sequences.fasta
 
 # Arguments :
 # ILLUMINACLIP:"$ADAPTERFILE":2:30:10 LEADING:30 TRAILING:30 SLIDINGWINDOW:26:30 MINLEN:150
