@@ -6,11 +6,11 @@
 ###############################################################
 
 
-WORKING_DIRECTORY=/scratch_vol1/fungi/dugong_microbiome/05_QIIME2
-OUTPUT=/scratch_vol1/fungi/dugong_microbiome/05_QIIME2/visual
+WORKING_DIRECTORY=/home/fungi/dugong_microbiome/05_QIIME2
+OUTPUT=/home/fungi/dugong_microbiome/05_QIIME2/visual
 
-DATABASE=/scratch_vol1/fungi/dugong_microbiome/98_database_files
-TMPDIR=/scratch_vol1
+DATABASE=/home/fungi/dugong_microbiome/98_database_files
+TMPDIR=/home
 
 
 # Aim: classify reads by taxon using a fitted classifier
@@ -36,7 +36,7 @@ eval "$(conda shell.bash hook)"
 conda activate qiime2-2021.4
 
 # I'm doing this step in order to deal the no space left in cluster :
-export TMPDIR='/scratch_vol1/fungi'
+export TMPDIR='/home/fungi'
 echo $TMPDIR
 
 # Make the directory (mkdir) only if not existe already(-p)
@@ -44,7 +44,7 @@ mkdir -p taxonomy/16S
 mkdir -p export/taxonomy/16S
 
 # I'm doing this step in order to deal the no space left in cluster :
-export TMPDIR='/scratch_vol1/fungi'
+export TMPDIR='/home/fungi'
 echo $TMPDIR
 
 ###### All this step was for "old" database, now we uysed new ones 
