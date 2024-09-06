@@ -3,7 +3,7 @@
 # trimmomatic version 0.39
 # trimmomatic manual : http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf
 
-WORKING_DIRECTORY=/home/fungi/dugong_microbiome/01_raw_data
+WORKING_DIRECTORY=/home/fungi/dugong_microbiome/01_raw_data/Original_reads
 OUTPUT=/home/fungi/dugong_microbiome/03_cleaned_data
 
 # Make the directory (mkdir) only if not existe already(-p)
