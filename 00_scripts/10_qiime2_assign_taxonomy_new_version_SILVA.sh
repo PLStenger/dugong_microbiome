@@ -32,8 +32,8 @@ TMPDIR=/home
 
 cd $WORKING_DIRECTORY
 
-#eval "$(conda shell.bash hook)"
-#conda activate qiime2-2024.5
+eval "$(conda shell.bash hook)"
+conda activate qiime2-2024.5
 singularity shell --cleanenv /scratch_vol0/fungi/qiime2_images/qiime2-2024.5.sif
 
 # I'm doing this step in order to deal the no space left in cluster :
