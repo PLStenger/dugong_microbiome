@@ -35,6 +35,7 @@ cd $WORKING_DIRECTORY
 eval "$(conda shell.bash hook)"
 conda activate qiime2-2021.4
 
+pip install git+https://github.com/bokulich-lab/RESCRIPt.git
 qiime dev refresh-cache
 
 # I'm doing this step in order to deal the no space left in cluster :
