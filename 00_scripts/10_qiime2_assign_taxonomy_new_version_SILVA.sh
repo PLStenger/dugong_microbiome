@@ -50,6 +50,8 @@ mkdir -p export/taxonomy/16S
 export TMPDIR='/scratch_vol0/fungi'
 echo $TMPDIR
 
+singularity exec --cleanenv --env TMPDIR=/scratch_vol0/fungi
+
 # Code from: https://forum.qiime2.org/t/processing-filtering-and-evaluating-the-silva-database-and-other-reference-sequence-data-with-rescript/15494
 $QIIME rescript get-silva-data \
     --p-version '138.2' \
