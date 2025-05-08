@@ -51,16 +51,17 @@ mkdir -p export/taxonomy/16S
 
 #singularity exec --cleanenv --env TMPDIR=/scratch_vol0/fungi
 
+# OK ! Je # pour gagner du temps ici
 # Code from: https://forum.qiime2.org/t/processing-filtering-and-evaluating-the-silva-database-and-other-reference-sequence-data-with-rescript/15494
-qiime rescript get-silva-data \
-    --p-version '138.2' \
-    --p-target 'SSURef_NR99' \
-    --o-silva-sequences silva-138.2-ssu-nr99-rna-seqs.qza \
-    --o-silva-taxonomy silva-138.2-ssu-nr99-tax.qza
+#qiime rescript get-silva-data \
+#    --p-version '138.2' \
+#    --p-target 'SSURef_NR99' \
+#    --o-silva-sequences silva-138.2-ssu-nr99-rna-seqs.qza \
+#    --o-silva-taxonomy silva-138.2-ssu-nr99-tax.qza
 
 # If you'd like to be able to jump to steps that only take FeatureData[Sequence] as input you can convert your data to FeatureData[Sequence] like so:
 qiime rescript reverse-transcribe \
-    --i-rna-sequences silva-138.2-ssu-nr99-rna-seqs.qza 
+    --i-rna-sequences silva-138.2-ssu-nr99-rna-seqs.qza \
     --o-dna-sequences silva-138.2-ssu-nr99-seqs.qza
 
 # “Culling” low-quality sequences with cull-seqs
