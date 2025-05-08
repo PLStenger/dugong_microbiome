@@ -41,6 +41,8 @@ conda activate qiime2-2024.5
 #qiime dev refresh-cache
 #$QIIME dev refresh-cache
 
+export PYTHONPATH="${PYTHONPATH}:/scratch_vol0/fungi/.local/lib/python3.9/site-packages/"
+
 # I'm doing this step in order to deal the no space left in cluster :
 export TMPDIR='/scratch_vol0/fungi'
 echo $TMPDIR
