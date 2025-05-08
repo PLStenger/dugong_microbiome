@@ -35,13 +35,15 @@ QIIME="singularity exec --cleanenv -B /scratch_vol0:/scratch_vol0 /scratch_vol0/
 cd $WORKING_DIRECTORY
 
 eval "$(conda shell.bash hook)"
-conda activate qiime2-2024.5
+#conda activate qiime2-2024.5
+conda activate qiime2-2021.4
+
 #singularity shell --cleanenv /scratch_vol0/fungi/qiime2_images/qiime2-2024.5.sif
 
 #qiime dev refresh-cache
 #$QIIME dev refresh-cache
 
-export PYTHONPATH="${PYTHONPATH}:/scratch_vol0/fungi/.local/lib/python3.9/site-packages/"
+#export PYTHONPATH="${PYTHONPATH}:/scratch_vol0/fungi/.local/lib/python3.9/site-packages/"
 
 # I'm doing this step in order to deal the no space left in cluster :
 export TMPDIR='/scratch_vol0/fungi'
@@ -58,7 +60,7 @@ echo $TMPDIR
 singularity exec --cleanenv --env TMPDIR=/scratch_vol0/fungi
 
 # Code from: https://forum.qiime2.org/t/processing-filtering-and-evaluating-the-silva-database-and-other-reference-sequence-data-with-rescript/15494
-$QIIME rescript get-silva-data \
+qiime rescript get-silva-data \
     --p-version '138.2' \
     --p-target 'SSURef_NR99' \
     --o-silva-sequences silva-138.2-ssu-nr99-rna-seqs.qza \
