@@ -12,6 +12,8 @@ OUTPUT=/scratch_vol0/fungi/dugong_microbiome/05_QIIME2/visual
 DATABASE=/scratch_vol0/fungi/dugong_microbiome/98_database_files
 TMPDIR=/home
 
+QIIME="singularity exec --cleanenv -B /scratch_vol0:/scratch_vol0 /scratch_vol0/fungi/qiime2_images/qiime2-2024.5.sif qiime"
+
 
 # Aim: classify reads by taxon using a fitted classifier
 
@@ -34,7 +36,7 @@ cd $WORKING_DIRECTORY
 
 eval "$(conda shell.bash hook)"
 conda activate qiime2-2024.5
-singularity shell --cleanenv /scratch_vol0/fungi/qiime2_images/qiime2-2024.5.sif
+#singularity shell --cleanenv /scratch_vol0/fungi/qiime2_images/qiime2-2024.5.sif
 
 # I'm doing this step in order to deal the no space left in cluster :
 export TMPDIR='/scratch_vol0/fungi'
@@ -49,25 +51,25 @@ export TMPDIR='/scratch_vol0/fungi'
 echo $TMPDIR
 
 # Code from: https://forum.qiime2.org/t/processing-filtering-and-evaluating-the-silva-database-and-other-reference-sequence-data-with-rescript/15494
-qiime rescript get-silva-data \
+$QIIME rescript get-silva-data \
     --p-version '138.2' \
     --p-target 'SSURef_NR99' \
     --o-silva-sequences silva-138.2-ssu-nr99-rna-seqs.qza \
     --o-silva-taxonomy silva-138.2-ssu-nr99-tax.qza
 
 # If you'd like to be able to jump to steps that only take FeatureData[Sequence] as input you can convert your data to FeatureData[Sequence] like so:
-qiime rescript reverse-transcribe \
+$QIIME rescript reverse-transcribe \
     --i-rna-sequences silva-138.2-ssu-nr99-rna-seqs.qza 
     --o-dna-sequences silva-138.2-ssu-nr99-seqs.qza
 
 # “Culling” low-quality sequences with cull-seqs
 # Here we’ll remove sequences that contain 5 or more ambiguous bases (IUPAC compliant ambiguity bases) and any homopolymers that are 8 or more bases in length. These are the default parameters.
-qiime rescript cull-seqs \
+$QIIME rescript cull-seqs \
     --i-sequences silva-138.2-ssu-nr99-seqs.qza \
     --o-clean-sequences silva-138.2-ssu-nr99-seqs-cleaned.qza
 
 # Filtering sequences by length and taxonomy
-qiime rescript filter-seqs-length-by-taxon \
+$QIIME rescript filter-seqs-length-by-taxon \
     --i-sequences silva-138.2-ssu-nr99-seqs-cleaned.qza \
     --i-taxonomy silva-138.2-ssu-nr99-tax.qza \
     --p-labels Archaea Bacteria Eukaryota \
@@ -76,7 +78,7 @@ qiime rescript filter-seqs-length-by-taxon \
     --o-discarded-seqs silva-138.2-ssu-nr99-seqs-discard.qza 
 
 #Dereplicating in uniq mode
-qiime rescript dereplicate \
+$QIIME rescript dereplicate \
     --i-sequences silva-138.2-ssu-nr99-seqs-filt.qza  \
     --i-taxa silva-138.2-ssu-nr99-tax.qza \
     --p-mode 'uniq' \
@@ -84,7 +86,7 @@ qiime rescript dereplicate \
     --o-dereplicated-taxa silva-138.2-ssu-nr99-tax-derep-uniq.qza
 
 
-qiime feature-classifier fit-classifier-naive-bayes \
+$QIIME feature-classifier fit-classifier-naive-bayes \
   --i-reference-reads  silva-138.2-ssu-nr99-seqs-derep-uniq.qza \
   --i-reference-taxonomy silva-138.2-ssu-nr99-tax-derep-uniq.qza \
   --o-classifier silva-138.2-ssu-nr99-classifier.qza    
@@ -132,7 +134,7 @@ qiime feature-classifier fit-classifier-naive-bayes \
 # From Clarisse and from bioinformatics <bioinformatics@microsynth.ch>
 # The sequences for the V34 primers were:
 # 341F    CCTACGGGNGGCWGCAG       805R    GACTACHVGGGTATCTAATCC
-qiime feature-classifier extract-reads \
+$QIIME feature-classifier extract-reads \
     --i-sequences silva-138.2-ssu-nr99-seqs-derep-uniq.qza \
     --p-f-primer CCTACGGGNGGCWGCAG \
     --p-r-primer GACTACHVGGGTATCTAATCC \
@@ -140,7 +142,7 @@ qiime feature-classifier extract-reads \
     --p-read-orientation 'forward' \
     --o-reads silva-138.2-ssu-nr99-seqs-341f-805r.qza
 
-qiime rescript dereplicate \
+$QIIME rescript dereplicate \
     --i-sequences silva-138.2-ssu-nr99-seqs-341f-805r.qza \
     --i-taxa silva-138.2-ssu-nr99-tax-derep-uniq.qza \
     --p-mode 'uniq' \
@@ -154,7 +156,7 @@ qiime rescript dereplicate \
 #  --o-classifier taxonomy/16S/Classifier.qza
   
 # Aim: Create a scikit-learn naive_bayes classifier for reads
-qiime feature-classifier fit-classifier-naive-bayes \
+$QIIME feature-classifier fit-classifier-naive-bayes \
     --i-reference-reads silva-138.2-ssu-nr99-seqs-341f-805r-uniq.qza \
     --i-reference-taxonomy silva-138.2-ssu-nr99-tax-341f-805r-derep-uniq.qza \
     --o-classifier silva-138.2-ssu-nr99-341f-805r-classifier.qza
@@ -163,17 +165,17 @@ scp -r silva-138.2-ssu-nr99-341f-805r-classifier.qza taxonomy/16S/Classifier.qza
 
 # Aim: Create a scikit-learn naive_bayes classifier for reads
 
-qiime feature-classifier classify-sklearn \
+$QIIME feature-classifier classify-sklearn \
    --i-classifier taxonomy/16S/Classifier.qza \
    --i-reads /home/fungi/dugong_microbiome/05_QIIME2/core/ConRepSeq.qza \
    --o-classification taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qza
    
-qiime feature-classifier classify-sklearn \
+$QIIME feature-classifier classify-sklearn \
   --i-classifier taxonomy/16S/Classifier.qza \
   --i-reads /home/fungi/dugong_microbiome/05_QIIME2/core/RepSeq.qza \
   --o-classification taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qza
 
-qiime feature-classifier classify-sklearn \
+$QIIME feature-classifier classify-sklearn \
   --i-classifier taxonomy/16S/Classifier.qza \
   --i-reads /home/fungi/dugong_microbiome/05_QIIME2/core/RarRepSeq.qza \
   --o-classification taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qza
@@ -181,51 +183,51 @@ qiime feature-classifier classify-sklearn \
 # Switch to https://chmi-sops.github.io/mydoc_qiime2.html#step-9-assign-taxonomy
 # --p-reads-per-batch 0 (default)
 
-qiime metadata tabulate \
+$QIIME metadata tabulate \
   --m-input-file taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qza \
   --o-visualization taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qzv
 
-qiime metadata tabulate \
+$QIIME metadata tabulate \
   --m-input-file taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qza \
   --o-visualization taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qzv
   
-qiime metadata tabulate \
+$QIIME metadata tabulate \
   --m-input-file taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qza \
   --o-visualization taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qzv  
 
 # Now create a visualization of the classified sequences.
   
-qiime taxa barplot \
+$QIIME taxa barplot \
   --i-table /home/fungi/dugong_microbiome/05_QIIME2/core/Table.qza \
   --i-taxonomy taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qza \
   --m-metadata-file $DATABASE/sample-metadata.tsv \
   --o-visualization taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RepSeq.qzv
 
-qiime taxa barplot \
+$QIIME taxa barplot \
   --i-table /home/fungi/dugong_microbiome/05_QIIME2/core/ConTable.qza \
   --i-taxonomy taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qza \
   --m-metadata-file $DATABASE/sample-metadata.tsv \
   --o-visualization taxonomy/16S/16Staxa-bar-plots_reads-per-batch_ConRepSeq.qzv
   
-qiime taxa barplot \
+$QIIME taxa barplot \
   --i-table /home/fungi/dugong_microbiome/05_QIIME2/core/RarTable.qza \
   --i-taxonomy taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qza \
   --m-metadata-file $DATABASE/sample-metadata.tsv \
   --o-visualization taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RarRepSeq.qzv  
 
-qiime tools export --input-path taxonomy/16S/Classifier.qza --output-path export/taxonomy/16S/Classifier
-qiime tools export --input-path taxonomy/16S/RefSeq.qza --output-path export/taxonomy/16S/RefSeq
-qiime tools export --input-path taxonomy/16S/16SDataSeq.qza --output-path export/taxonomy/16S/16SDataSeq
-qiime tools export --input-path taxonomy/16S/RefTaxo.qza --output-path export/taxonomy/16S/RefTaxo
+$QIIME tools export --input-path taxonomy/16S/Classifier.qza --output-path export/taxonomy/16S/Classifier
+$QIIME tools export --input-path taxonomy/16S/RefSeq.qza --output-path export/taxonomy/16S/RefSeq
+$QIIME tools export --input-path taxonomy/16S/16SDataSeq.qza --output-path export/taxonomy/16S/16SDataSeq
+$QIIME tools export --input-path taxonomy/16S/RefTaxo.qza --output-path export/taxonomy/16S/RefTaxo
   
-qiime tools export --input-path taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RarRepSeq.qzv --output-path export/taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RarRepSeq
-qiime tools export --input-path taxonomy/16S/16Staxa-bar-plots_reads-per-batch_ConRepSeq.qzv --output-path export/taxonomy/16S/16Staxa-bar-plots_reads-per-batch_ConRepSeq
-qiime tools export --input-path taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RepSeq.qzv --output-path export/taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RepSeq
+$QIIME tools export --input-path taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RarRepSeq.qzv --output-path export/taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RarRepSeq
+$QIIME tools export --input-path taxonomy/16S/16Staxa-bar-plots_reads-per-batch_ConRepSeq.qzv --output-path export/taxonomy/16S/16Staxa-bar-plots_reads-per-batch_ConRepSeq
+$QIIME tools export --input-path taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RepSeq.qzv --output-path export/taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RepSeq
 
-qiime tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qzv --output-path export/taxonomy/16S/taxonomy_reads-per-batch_RepSeq_visual
-qiime tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qzv --output-path export/taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq_visual
-qiime tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qzv --output-path export/taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq_visual
+$QIIME tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qzv --output-path export/taxonomy/16S/taxonomy_reads-per-batch_RepSeq_visual
+$QIIME tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qzv --output-path export/taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq_visual
+$QIIME tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qzv --output-path export/taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq_visual
 
-qiime tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qza --output-path export/taxonomy/16S/taxonomy_reads-per-batch_RepSeq
-qiime tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qza --output-path export/taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq
-qiime tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qza --output-path export/taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq
+$QIIME tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qza --output-path export/taxonomy/16S/taxonomy_reads-per-batch_RepSeq
+$QIIME tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qza --output-path export/taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq
+$QIIME tools export --input-path taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qza --output-path export/taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq
