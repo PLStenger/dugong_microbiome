@@ -6,10 +6,10 @@
 ###############################################################
 
 
-WORKING_DIRECTORY=/scratch_vol1/fungi/dugong_microbiome/05_QIIME2
-OUTPUT=/scratch_vol1/fungi/dugong_microbiome/05_QIIME2/visual
+WORKING_DIRECTORY=/scratch_vol0/fungi/dugong_microbiome/05_QIIME2
+OUTPUT=/scratch_vol0/fungi/dugong_microbiome/05_QIIME2/visual
 
-DATABASE=/scratch_vol1/fungi/dugong_microbiome/98_database_files
+DATABASE=/scratch_vol0/fungi/dugong_microbiome/98_database_files
 TMPDIR=/home
 
 
@@ -37,7 +37,7 @@ conda activate qiime2-2024.5
 singularity shell --cleanenv /scratch_vol0/fungi/qiime2_images/qiime2-2024.5.sif
 
 # I'm doing this step in order to deal the no space left in cluster :
-export TMPDIR='/scratch_vol1/fungi'
+export TMPDIR='/scratch_vol0/fungi'
 echo $TMPDIR
 
 # Make the directory (mkdir) only if not existe already(-p)
@@ -45,7 +45,7 @@ mkdir -p taxonomy/16S
 mkdir -p export/taxonomy/16S
 
 # I'm doing this step in order to deal the no space left in cluster :
-export TMPDIR='/scratch_vol1/fungi'
+export TMPDIR='/scratch_vol0/fungi'
 echo $TMPDIR
 
 # Code from: https://forum.qiime2.org/t/processing-filtering-and-evaluating-the-silva-database-and-other-reference-sequence-data-with-rescript/15494
