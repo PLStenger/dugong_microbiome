@@ -6,10 +6,10 @@
 ###############################################################
 
 
-WORKING_DIRECTORY=/home/fungi/dugong_microbiome/05_QIIME2
-OUTPUT=/home/fungi/dugong_microbiome/05_QIIME2/visual
+WORKING_DIRECTORY=/scratch_vol1/fungi/dugong_microbiome/05_QIIME2
+OUTPUT=/scratch_vol1/fungi/dugong_microbiome/05_QIIME2/visual
 
-DATABASE=/home/fungi/dugong_microbiome/98_database_files
+DATABASE=/scratch_vol1/fungi/dugong_microbiome/98_database_files
 TMPDIR=/home
 
 
@@ -37,7 +37,7 @@ conda activate qiime2-2024.5
 singularity shell --cleanenv /scratch_vol0/fungi/qiime2_images/qiime2-2024.5.sif
 
 # I'm doing this step in order to deal the no space left in cluster :
-export TMPDIR='/home/fungi'
+export TMPDIR='/scratch_vol1/fungi'
 echo $TMPDIR
 
 # Make the directory (mkdir) only if not existe already(-p)
@@ -45,7 +45,7 @@ mkdir -p taxonomy/16S
 mkdir -p export/taxonomy/16S
 
 # I'm doing this step in order to deal the no space left in cluster :
-export TMPDIR='/home/fungi'
+export TMPDIR='/scratch_vol1/fungi'
 echo $TMPDIR
 
 # Code from: https://forum.qiime2.org/t/processing-filtering-and-evaluating-the-silva-database-and-other-reference-sequence-data-with-rescript/15494
@@ -165,17 +165,17 @@ scp -r silva-138.2-ssu-nr99-341f-805r-classifier.qza taxonomy/16S/Classifier.qza
 
 qiime feature-classifier classify-sklearn \
    --i-classifier taxonomy/16S/Classifier.qza \
-   --i-reads core/ConRepSeq.qza \
+   --i-reads /home/fungi/dugong_microbiome/05_QIIME2/core/ConRepSeq.qza \
    --o-classification taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qza
    
 qiime feature-classifier classify-sklearn \
   --i-classifier taxonomy/16S/Classifier.qza \
-  --i-reads core/RepSeq.qza \
+  --i-reads /home/fungi/dugong_microbiome/05_QIIME2/core/RepSeq.qza \
   --o-classification taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qza
 
 qiime feature-classifier classify-sklearn \
   --i-classifier taxonomy/16S/Classifier.qza \
-  --i-reads core/RarRepSeq.qza \
+  --i-reads /home/fungi/dugong_microbiome/05_QIIME2/core/RarRepSeq.qza \
   --o-classification taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qza
 
 # Switch to https://chmi-sops.github.io/mydoc_qiime2.html#step-9-assign-taxonomy
@@ -196,19 +196,19 @@ qiime metadata tabulate \
 # Now create a visualization of the classified sequences.
   
 qiime taxa barplot \
-  --i-table core/Table.qza \
+  --i-table /home/fungi/dugong_microbiome/05_QIIME2/core/Table.qza \
   --i-taxonomy taxonomy/16S/taxonomy_reads-per-batch_RepSeq.qza \
   --m-metadata-file $DATABASE/sample-metadata.tsv \
   --o-visualization taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RepSeq.qzv
 
 qiime taxa barplot \
-  --i-table core/ConTable.qza \
+  --i-table /home/fungi/dugong_microbiome/05_QIIME2/core/ConTable.qza \
   --i-taxonomy taxonomy/16S/taxonomy_reads-per-batch_ConRepSeq.qza \
   --m-metadata-file $DATABASE/sample-metadata.tsv \
   --o-visualization taxonomy/16S/16Staxa-bar-plots_reads-per-batch_ConRepSeq.qzv
   
 qiime taxa barplot \
-  --i-table core/RarTable.qza \
+  --i-table /home/fungi/dugong_microbiome/05_QIIME2/core/RarTable.qza \
   --i-taxonomy taxonomy/16S/taxonomy_reads-per-batch_RarRepSeq.qza \
   --m-metadata-file $DATABASE/sample-metadata.tsv \
   --o-visualization taxonomy/16S/16Staxa-bar-plots_reads-per-batch_RarRepSeq.qzv  
