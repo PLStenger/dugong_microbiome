@@ -38,6 +38,9 @@ eval "$(conda shell.bash hook)"
 conda activate qiime2-2024.5
 #singularity shell --cleanenv /scratch_vol0/fungi/qiime2_images/qiime2-2024.5.sif
 
+#qiime dev refresh-cache
+#$QIIME dev refresh-cache
+
 # I'm doing this step in order to deal the no space left in cluster :
 export TMPDIR='/scratch_vol0/fungi'
 echo $TMPDIR
